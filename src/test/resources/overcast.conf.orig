@@ -1,0 +1,74 @@
+# In jenkins jobs the shared vagrant scripts are checked out in the ITEST_VAGRANT_REPO/vagrant.
+# Developers can set ITEST_VAGRANT_REPO or provide definitions in their global overcast properties
+# the default value here is to prevent freemarker exceptions, which leads to ClassNotFound
+# exceptions (!) in the gradle build. The default value is a bit more in your face.
+
+
+//puppet-34-unix {
+//  vagrantDir=${ITEST_VAGRANT_REPO}"/itest/xldpuppet"
+//  vagrantIp="10.10.20.9"
+//  vagrantVm="puppet34"
+//  vagrantSnapshotExpirationCmd="git rev-parse HEAD"
+//}
+
+
+// expected settings:
+// - itest.libvirtHost
+// - itest.libvirtUrl
+// - itest.vagrantDir
+// - itest.catalogDir
+// - itest.bootDelay (optional)
+// - itest.provisionedBootDelay (optional) (after provisioning booting may take longer)
+// - itest.dhcpHostUrl
+// - itest.dhcpLeasesLocation
+// - itest.expirationUrl (optional)
+// - itest.dhcpTimeout (optional)
+// - itest.puppet.debugFlags (optional)
+
+
+# Common setup
+
+itest.unixVmPortTimeout = 600
+puppetItest {
+    basebox="base-itest"
+    provisionUrl="ssh://vagrant@{0}?os=UNIX&connectionType=SUDO&sudoUsername=root&allocatePty=xterm:80:24:0:0&privateKeyFile="${user.home}"/.ssh/base-itest.pem"
+    expirationUrl="ssh://"${itest.libvirtHost}"?os=UNIX&connectionType=SCP&privateKeyFile="${user.home}"/.ssh/id_rsa"
+    expirationUrl=${?itest.expirationUrl}
+    vagrantDir=${itest.vagrantDir}"/itest/xldpuppet"
+    expirationCmd="""f=`find """${puppetItest.vagrantDir}""" -type f` && cat $f | sha256sum"""
+}
+
+
+puppet-template-unix {
+    libvirtURL=${itest.libvirtUrl}
+    baseDomain=${puppetItest.basebox}
+    network="br0"
+    bootDelay=5
+    bootDelay=${?itest.bootDelay}
+
+    fsMapping {
+        9p-vagrant { hostPath = ${puppetItest.vagrantDir}, readOnly = true }
+        9p-catalog { hostPath = ${itest.catalogDir}, readOnly = true }
+    }
+
+    ipLookupStrategy="SSH"
+    SSH {
+        url=${itest.dhcpHostUrl}
+        command="""grep {0} """${itest.dhcpLeasesLocation}""" | cut -d " " -f 3"""
+        timeout=30
+        timeout=${?itest.dhcpTimeout}
+    }
+
+    provision {
+        bootDelay=10
+        bootDelay=${?itest.provisionedBootDelay}
+
+        url=${puppetItest.provisionUrl}
+        expirationTag {
+            url=${puppetItest.expirationUrl}
+            cmd=${puppetItest.expirationCmd}
+        }
+    }
+}
+
+puppet-34-unix = ${puppet-template-unix}
