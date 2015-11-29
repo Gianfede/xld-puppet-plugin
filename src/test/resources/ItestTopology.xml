@@ -1,0 +1,24 @@
+<itest>
+    <toplogy id="puppet-34-unix" enableByDefault="false">
+        <placeholders>
+            <host>puppet-34-unix</host>
+        </placeholders>
+        <targets>
+            <target id="Infrastructure/puppet-34-unix/puppet">
+            </target>
+        </targets>
+        <configurationItems>
+            <overthere.SshHost id="Infrastructure/puppet-34-unix">
+                <os>UNIX</os>
+                <connectionType>SUDO</connectionType>
+                <address>${puppet-34-unix}</address>
+                <username>vagrant</username>
+                <password>vagrant</password>
+                <sudoUsername>vagrant</sudoUsername>
+            </overthere.SshHost>
+            <puppet.Standalone id="Infrastructure/puppet-34-unix/puppet">
+                <puppetPath>/usr/local/bin/</puppetPath>
+            </puppet.Standalone>
+        </configurationItems>
+    </toplogy>
+</itest>

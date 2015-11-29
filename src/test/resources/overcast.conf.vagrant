@@ -1,0 +1,6 @@
+//puppet-34-unix {
+//  vagrantDir=${ITEST_VAGRANT_REPO}"/itest/xldpuppet"
+//	vagrantIp="10.10.20.9"
+//	vagrantVm="puppet34"
+//	vagrantSnapshotExpirationCmd="git rev-parse HEAD"
+//}

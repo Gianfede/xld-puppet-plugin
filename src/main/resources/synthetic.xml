@@ -1,0 +1,43 @@
+<synthetic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://www.xebialabs.com/deployit/synthetic" xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
+
+    <type type="puppet.Manifest" extends="udm.BaseDeployedArtifact" deployable-type="puppet.ManifestSpec" container-type="puppet.Standalone" description="Puppet manifest file applied on the host.">
+        <generate-deployable type="puppet.ManifestSpec" extends="udm.BaseDeployableFileArtifact" description="Puppet manifest file applied on the host."/>
+    </type>
+
+    <type type="puppet.ManifestFolder" extends="udm.BaseDeployedArtifact" deployable-type="puppet.ManifestFolderSpec" container-type="puppet.Standalone" description="Puppet manifest folder applied on the host.">
+        <generate-deployable type="puppet.ManifestFolderSpec" extends="udm.BaseDeployableFolderArtifact" description="Puppet manifest folder applied on the host."/>
+        <property name="manifestFile" description="Manifest file name. For example, init.pp."/>
+        <property name="manifestPath" description="Location of the manifest folder as an absolute path or as a path relative to the uploaded folder artifact."/>
+        <property name="modulePath" required="false" description="Location of the module directory as an absolute path or as a path relative to the uploaded folder artifact."/>
+        <property name="hieraConfig" required="false" description="Location of the Hiera configuration file as an absolute path or as a path relative to the uploaded folder artifact."/>
+        <property name="verbose" required="false" kind="boolean" default="false" description="Enable verbose mode." category="Advanced"/>
+        <property name="debug" required="false" kind="boolean" default="false" description="Enable debug mode." category="Advanced"/>
+        <property name="trace" required="false" kind="boolean" default="false" description="Enable trace mode." category="Advanced"/>
+    </type>
+
+    <type type="puppet.Module" extends="udm.BaseDeployed" deployable-type="puppet.ModuleSpec" container-type="puppet.Standalone" description="Puppet module installed from Puppet Forge. The artifact name should be same as the Puppet module name. For example, puppetlabs-apache.">
+        <generate-deployable type="puppet.ModuleSpec" extends="udm.BaseDeployable" description="Puppet module installed from Puppet Forge. The artifact name should be same as the Puppet module name. For example, puppetlabs-apache."/>
+        <property name="version" required="false" description="Version of the module to install from Puppet Forge."/>
+        <property name="force" kind="boolean" default="false" required="false" description="Force overwrite of existing module, if any. Implies --force."/>
+        <property name="ignoreDependencies" kind="boolean" required="false" default="false" description="Do not attempt to install dependencies. Implied by --ignore-dependencies."/>
+        <property name="debug" required="false" kind="boolean" default="false" description="Enable debug mode." category="Advanced"/>
+    </type>
+
+    <type type="puppet.TarBallModule" extends="udm.BaseDeployedArtifact" deployable-type="puppet.TarBallModuleSpec" container-type="puppet.Standalone" description="Puppet module installed from a tarball archive file. The artifact name should be same as the Puppet module name. For example, puppetlabs-apache.">
+        <generate-deployable type="puppet.TarBallModuleSpec" extends="udm.BaseDeployableFileArtifact" description="Puppet module installed from a tarball archive file. The artifact name should be same as the Puppet module name. For example, puppetlabs-apache."/>
+        <property name="debug" required="false" kind="boolean" default="false" description="Enable debug mode." category="Advanced"/>
+    </type>
+
+    <type-modification type="puppet.ManifestSpec">
+        <property name="textFileNamesRegex" default=".+\.(properties | pp)" hidden="true"/>
+    </type-modification>
+
+    <type-modification type="puppet.ManifestFolderSpec">
+        <property name="textFileNamesRegex" default=".+\.(properties | pp)" hidden="true"/>
+    </type-modification>
+
+    <type type="puppet.Standalone" extends="generic.Container">
+        <property name="puppetPath" default="/usr/local/bin" required="false" description="Puppet binary directory path."/>
+    </type>
+</synthetic>
