@@ -21,7 +21,6 @@ public class PuppetItestWizard extends ItestWizard {
     @Override
     protected void assertPlan(final DeltaSpecification spec) {
         List<Step> steps = tester.resolvePlanWithStaging(spec);
-
         TestExecutionContext ctx = new TestExecutionContext(ItestWizard.class);
 
         try {

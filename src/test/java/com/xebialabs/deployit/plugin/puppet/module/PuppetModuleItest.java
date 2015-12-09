@@ -9,7 +9,10 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static com.xebialabs.platform.test.TestUtils.newInstance;
+
 import com.xebialabs.deployit.plugin.api.udm.Container;
+
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -21,12 +24,17 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
 
     @Test
     public void shouldInstallUpgradeAndUnInstallPuppetModule() throws IOException {
-        DeployedApplication puppetModule = getDeployedPuppetModuleApplication("1.5.0");
+        Deployed<?, ?> deployed = getDeployed("1.5.0");
+        assertThat(getSteps(deployed).size(), equalTo(1));
+        DeployedApplication puppetModule = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModule);
         getPuppetModuleListCommandOutput();
         assertModuleInstallAndVersionCheck(APACHE_MODULE_VERSION_1_5_0);
 
-        DeployedApplication puppetUpgradedModule = getDeployedPuppetModuleApplication("1.7.0");
+        Deployed<?, ?> upgradedDeployed = getDeployed("1.7.0");
+        assertThat(getSteps(upgradedDeployed).size(), equalTo(1));
+        DeployedApplication puppetUpgradedModule = newDeployedApplication("puppetlabs-apache", "1.7.0", upgradedDeployed);
+
         resetContext();
         assertUpgrade(puppetModule, puppetUpgradedModule);
         getPuppetModuleListCommandOutput();
@@ -40,7 +48,10 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
 
     @Test
     public void shouldInstallAndUnInstallPuppetModule() {
-        DeployedApplication puppetModuleApp = getDeployedPuppetModuleApplication("1.5.0");
+
+        Deployed<?, ?> deployed = getDeployed("1.5.0");
+        assertThat(getSteps(deployed).size(), equalTo(1));
+        DeployedApplication puppetModuleApp = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModuleApp);
         getPuppetModuleListCommandOutput();
         assertModuleInstallAndVersionCheck(APACHE_MODULE_VERSION_1_5_0);
@@ -50,12 +61,11 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
         assertThat(executionContext.getCapturedOutput(), hasItem(not(containsString("puppetlabs-apache"))));
     }
 
-    private DeployedApplication getDeployedPuppetModuleApplication(String version) {
+    private Deployed<?, ?> getDeployed(String version) {
         Deployed<?, ?> puppetModule = deployed((Deployable) newInstance("puppet.ModuleSpec", "puppetlabs-apache"), container, "puppet.Module");
         puppetModule.setProperty("version", version);
         puppetModule.setProperty("force", true);
         puppetModule.setProperty("ignoreDependencies", false);
-
-        return newDeployedApplication("puppetlabs-apache", version, puppetModule);
+        return puppetModule;
     }
 }

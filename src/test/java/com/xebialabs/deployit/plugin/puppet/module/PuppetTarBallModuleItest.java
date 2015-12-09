@@ -17,6 +17,7 @@ import java.net.URL;
 
 import static com.xebialabs.platform.test.TestUtils.id;
 import static com.xebialabs.platform.test.TestUtils.newInstance;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -32,10 +33,15 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
 
     @Test
     public void shouldInstallUpgradeAndUnInstallPuppetTarBallModule() throws IOException {
-        DeployedApplication deployedTarModule = getDeployedTarBallModule(ARTIFACTS_APACHE_1_5_0_TAR);
+        Deployed<?, ?> puppetDeployed = getDeployed(ARTIFACTS_APACHE_1_5_0_TAR);
+        assertThat(getSteps(puppetDeployed).size(), equalTo(1));
+        DeployedApplication deployedTarModule = newDeployedApplication("puppetlabs-apache", "1.0", puppetDeployed);
         assertModuleInstallSuccessfully(deployedTarModule);
 
-        DeployedApplication deployedTarUpgradedModule = getDeployedTarBallModule(ARTIFACTS_APACHE_1_7_0_TAR);
+        Deployed<?, ?> upgradedPuppetDeployed = getDeployed(ARTIFACTS_APACHE_1_7_0_TAR);
+        assertThat(getSteps(upgradedPuppetDeployed).size(), equalTo(1));
+        DeployedApplication deployedTarUpgradedModule = newDeployedApplication("puppetlabs-apache", "1.0", upgradedPuppetDeployed);
+
         resetContext();
         assertUpgrade(deployedTarModule, deployedTarUpgradedModule);
         getPuppetModuleListCommandOutput();
@@ -49,7 +55,9 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
 
     @Test
     public void shouldInstallAndUnInstallPuppetTarBallModule() throws IOException {
-        DeployedApplication deployedTarModule = getDeployedTarBallModule(ARTIFACTS_APACHE_1_5_0_TAR);
+        Deployed<?, ?> puppetDeployed = getDeployed(ARTIFACTS_APACHE_1_5_0_TAR);
+        assertThat(getSteps(puppetDeployed).size(), equalTo(1));
+        DeployedApplication deployedTarModule = newDeployedApplication("puppetlabs-apache", "1.0", puppetDeployed);
         assertModuleInstallSuccessfully(deployedTarModule);
 
         resetContext();
@@ -58,11 +66,9 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
         assertThat(executionContext.getCapturedOutput(), hasItem(not(containsString("puppetlabs-apache"))));
     }
 
-    private DeployedApplication getDeployedTarBallModule(String artifactsApacheTarFile) throws IOException {
+    private Deployed<?, ?> getDeployed(String artifactsApacheTarFile) throws IOException {
         BaseDeployableFileArtifact module = createFileArtifact("puppetlabs-apache", "1.0", artifactsApacheTarFile, "puppet.TarBallModuleSpec", tempFolder.newFolder());
-        Deployed<?, ?> puppetDeployed = wizard.deployed(module, container, "puppet.TarBallModule");
-
-        return newDeployedApplication("puppetlabs-apache", "1.0", puppetDeployed);
+        return wizard.deployed(module, container, "puppet.TarBallModule");
     }
 
     private void assertModuleInstallSuccessfully(DeployedApplication deployedTarModule) {
