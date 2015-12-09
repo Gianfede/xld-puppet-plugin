@@ -29,7 +29,7 @@ public class PuppetModuleItestBase extends PuppetItestBase {
 
     public void getPuppetModuleListCommandOutput() {
         CmdLine cmd = new CmdLine();
-        cmd.addRaw(container.getProperty("puppetPath") + "/puppet module list");
+        cmd.addRaw(container.getProperty("puppetPath") + "puppet module list");
         try (DefaultExecutionOutputHandler stdoutHandler = handleStdout(executionContext);
              DefaultExecutionOutputHandler stderrHandler = handleStderr(executionContext)) {
             int exitCode = getHost().getConnection().execute(stdoutHandler, stderrHandler, cmd);

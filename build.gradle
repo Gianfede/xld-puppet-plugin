@@ -15,8 +15,9 @@ grouped by license:\n"""
 }
 
 dependencies {
-    compile overthere
     compile xl_deploy_generic_plugin
+    compile overthere
+    compile jython_standalone
 
     testCompile junit
     testCompile xl_deploy_test_engine

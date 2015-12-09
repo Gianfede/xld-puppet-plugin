@@ -1,14 +1,16 @@
 package com.xebialabs.deployit.plugin.puppet;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.xebialabs.deployit.booter.local.LocalBooter;
+import com.xebialabs.deployit.deployment.planner.DeltaSpecificationBuilder;
 import com.xebialabs.deployit.itest.ItestWizard;
 import com.xebialabs.deployit.itest.cloudhost.ItestHostLauncher;
+import com.xebialabs.deployit.plugin.api.flow.Step;
 import com.xebialabs.deployit.plugin.api.reflect.Type;
-import com.xebialabs.deployit.plugin.api.udm.Container;
-import com.xebialabs.deployit.plugin.api.udm.Deployable;
-import com.xebialabs.deployit.plugin.api.udm.Deployed;
-import com.xebialabs.deployit.plugin.api.udm.DeployedApplication;
+import com.xebialabs.deployit.plugin.api.udm.*;
 import com.xebialabs.deployit.plugin.overthere.Host;
 import com.xebialabs.deployit.test.deployment.DeployitTester;
 import com.xebialabs.deployit.test.support.CapturingExecutionContext;
@@ -28,6 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.xebialabs.deployit.test.deployment.DeltaSpecifications.createDeployedApplication;
+import static com.xebialabs.platform.test.TestUtils.createDeploymentPackage;
+import static com.xebialabs.platform.test.TestUtils.createEnvironment;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -128,6 +134,16 @@ public class PuppetItestBase {
         }
     }
 
+    protected void deleteGeneratedFileFromRemoteHost(Host host, String path) {
+        OverthereConnection conn = host.getConnection();
+        try {
+            OverthereFile file = conn.getFile(path);
+            file.delete();
+        } finally {
+            conn.close();
+        }
+    }
+
     public Deployed<?, ?> deployed(final Deployable deployable, final Container container, final String type) {
         return wizard.deployed(deployable, container, type);
     }
@@ -137,6 +153,33 @@ public class PuppetItestBase {
     }
 
     public Host getHost() {
-        return (Host)topology.findFirstMatchingCi(Type.valueOf("overthere.SshHost"));
+        return (Host) topology.findFirstMatchingCi(Type.valueOf("overthere.SshHost"));
+    }
+
+    protected DeltaSpecificationBuilder createDeltaSpecBuilder(Deployed<?, ?>... deployeds) {
+        Iterable<Deployable> deployables = transform(deployeds);
+        DeploymentPackage deploymentPackage = createDeploymentPackage(Iterables
+                .toArray(deployables, Deployable.class));
+        Environment environment = createEnvironment(container);
+        DeltaSpecificationBuilder specificationBuilder = new DeltaSpecificationBuilder();
+        specificationBuilder.initial(createDeployedApplication(
+                deploymentPackage, environment));
+        return specificationBuilder;
+    }
+
+    protected Iterable<Deployable> transform(Deployed<?, ?>... deployeds) {
+        return Lists.transform(newArrayList(deployeds),
+                new Function<Deployed<?, ?>, Deployable>() {
+                    @Override
+                    public Deployable apply(Deployed<?, ?> input) {
+                        return input.getDeployable();
+                    }
+                });
+    }
+
+    protected List<Step> getSteps(Deployed<?, ?> deployed) {
+        DeltaSpecificationBuilder specBuilder = createDeltaSpecBuilder(deployed);
+        specBuilder.create(deployed);
+        return tester.resolvePlan(specBuilder.build());
     }
 }

@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-${previousDeployed.container.puppetPath}/puppet module uninstall ${previousDeployed.name}  <#if previousDeployed.force> --force  </#if>
+${previousDeployed.container.puppetPath}/puppet module uninstall <#if previousDeployed.moduleName?has_content > ${previousDeployed.moduleName} <#else> ${previousDeployed.name} </#if> <#if previousDeployed.force> --force  </#if>
 set +x
 rc=$?
 if [ $rc -ne 0 ]; then

@@ -9,9 +9,24 @@
         </conditions>
         <steps>
             <os-script>
-                <description expression="true">"Apply manifest '%s' on '%s' " % (deployed.name,deployed.container.name)</description>
+                <description expression="true">"Apply manifest %s on %s " % (deployed.name,deployed.container.name)</description>
                 <script>puppet/run-manifest</script>
-                <order>72</order>
+                <order expression="true">deployed.applyOrder</order>
+            </os-script>
+        </steps>
+    </rule>
+
+    <rule name="puppet.Manifest.NOOP" scope="deployed">
+        <conditions>
+            <type>puppet.Manifest</type>
+            <operation>NOOP</operation>
+            <expression>deployed.applyOnNoop</expression>
+        </conditions>
+        <steps>
+            <os-script>
+                <description expression="true">"Apply manifest %s on %s " % (deployed.name,deployed.container.name) </description>
+                <script>puppet/run-manifest</script>
+                <order expression="true">deployed.applyOrder</order>
             </os-script>
         </steps>
     </rule>
@@ -24,9 +39,24 @@
         </conditions>
         <steps>
             <os-script>
-                <description expression="true">"Apply manifest folder '%s' on '%s' " % (deployed.name,deployed.container.name)</description>
+                <description expression="true">"Apply manifest folder %s on %s " % (deployed.name,deployed.container.name)</description>
                 <script>puppet/run-manifest-folder</script>
-                <order>72</order>
+                <order expression="true">deployed.applyOrder</order>
+            </os-script>
+        </steps>
+    </rule>
+
+    <rule name="puppet.ManifestFolder.NOOP" scope="deployed">
+        <conditions>
+            <type>puppet.ManifestFolder</type>
+            <operation>NOOP</operation>
+            <expression>deployed.applyOnNoop</expression>
+        </conditions>
+        <steps>
+            <os-script>
+                <description expression="true">"Apply manifest folder %s on %s " % (deployed.name,deployed.container.name)</description>
+                <script>puppet/run-manifest-folder</script>
+                <order expression="true">deployed.applyOrder</order>
             </os-script>
         </steps>
     </rule>
@@ -37,13 +67,7 @@
             <operation>CREATE</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <steps>
-            <os-script>
-                <description expression="true">"Install module '%s' on '%s' " % (deployed.name,deployed.container.name)</description>
-                <script>puppet/install-module</script>
-                <order>70</order>
-            </os-script>
-        </steps>
+        <planning-script-path>puppet/scripts/add-module-install-step.py</planning-script-path>
     </rule>
 
     <rule name="puppet.Module.MODIFY_DESTROY" scope="deployed">
@@ -52,13 +76,7 @@
             <operation>DESTROY</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <steps>
-            <os-script>
-                <description expression="true">"Uninstall module '%s' on '%s' " % (previousDeployed.name,previousDeployed.container.name)</description>
-                <script>puppet/uninstall-module</script>
-                <order>40</order>
-            </os-script>
-        </steps>
+        <planning-script-path>puppet/scripts/add-module-uninstall-step.py</planning-script-path>
     </rule>
 
     <rule name="puppet.TarBallModule.CREATE_MODIFY" scope="deployed">
@@ -67,13 +85,7 @@
             <operation>CREATE</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <steps>
-            <os-script>
-                <description expression="true">"Install tarball module '%s' on '%s' " % (deployed.name,deployed.container.name)</description>
-                <script>puppet/install-tarball-module</script>
-                <order>71</order>
-            </os-script>
-        </steps>
+        <planning-script-path>puppet/scripts/add-tarball-module-install-step.py</planning-script-path>
     </rule>
 
     <rule name="puppet.TarBallModule.DESTROY_MODIFY" scope="deployed">
@@ -82,13 +94,7 @@
             <operation>DESTROY</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <steps>
-            <os-script>
-                <description expression="true">"Uninstall tarball module '%s' on '%s' " % (previousDeployed.name,previousDeployed.container.name)</description>
-                <script>puppet/uninstall-tarball-module</script>
-                <order>40</order>
-            </os-script>
-        </steps>
+        <planning-script-path>puppet/scripts/add-tarball-module-uninstall-step.py</planning-script-path>
     </rule>
 
 </rules>
