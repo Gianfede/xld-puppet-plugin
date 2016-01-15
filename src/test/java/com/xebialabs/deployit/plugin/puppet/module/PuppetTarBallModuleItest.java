@@ -39,7 +39,7 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
         assertModuleInstallSuccessfully(deployedTarModule);
 
         Deployed<?, ?> upgradedPuppetDeployed = getDeployed(ARTIFACTS_APACHE_1_7_0_TAR);
-        assertThat(getSteps(upgradedPuppetDeployed).size(), equalTo(1));
+        assertThat(getSteps(upgradedPuppetDeployed).size(), equalTo(2));
         DeployedApplication deployedTarUpgradedModule = newDeployedApplication("puppetlabs-apache", "1.0", upgradedPuppetDeployed);
 
         resetContext();
