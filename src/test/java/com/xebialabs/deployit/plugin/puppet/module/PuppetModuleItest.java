@@ -25,14 +25,14 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
     @Test
     public void shouldInstallUpgradeAndUnInstallPuppetModule() throws IOException {
         Deployed<?, ?> deployed = getDeployed("1.5.0");
-        assertThat(getSteps(deployed).size(), equalTo(1));
+        assertThat(getSteps(deployed).size(), equalTo(2));
         DeployedApplication puppetModule = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModule);
         getPuppetModuleListCommandOutput();
         assertModuleInstallAndVersionCheck(APACHE_MODULE_VERSION_1_5_0);
 
         Deployed<?, ?> upgradedDeployed = getDeployed("1.7.0");
-        assertThat(getSteps(upgradedDeployed).size(), equalTo(1));
+        assertThat(getSteps(upgradedDeployed).size(), equalTo(2));
         DeployedApplication puppetUpgradedModule = newDeployedApplication("puppetlabs-apache", "1.7.0", upgradedDeployed);
 
         resetContext();
@@ -50,7 +50,7 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
     public void shouldInstallAndUnInstallPuppetModule() {
 
         Deployed<?, ?> deployed = getDeployed("1.5.0");
-        assertThat(getSteps(deployed).size(), equalTo(1));
+        assertThat(getSteps(deployed).size(), equalTo(2));
         DeployedApplication puppetModuleApp = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModuleApp);
         getPuppetModuleListCommandOutput();

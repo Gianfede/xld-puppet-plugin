@@ -47,7 +47,7 @@ public class PuppetManifestItest extends PuppetItestBase {
 
 
     private void assertManifestApplied(Deployed<?, ?> puppetDeployed, DeployedApplication deployedManifest) {
-        assertThat(getSteps(puppetDeployed).size(), equalTo(1));
+        assertThat(getSteps(puppetDeployed).size(), equalTo(2));
         assertInitial(deployedManifest);
         assertFileExists(getHost(), MANIFEST_TEST_FILE_PATH);
     }

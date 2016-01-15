@@ -39,7 +39,7 @@ public class PuppetManifestFolderItest extends PuppetItestBase {
     }
 
     private void assertManifestFolderApplied(Deployed<?, ?> deployed, DeployedApplication deployedManifest) {
-        assertThat(getSteps(deployed).size(), equalTo(1));
+        assertThat(getSteps(deployed).size(), equalTo(2));
         assertInitial(deployedManifest);
         assertFileExists(getHost(), MANIFEST_FOLDER_TMP_FILE_PATH);
     }

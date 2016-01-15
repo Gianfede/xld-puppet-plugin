@@ -34,7 +34,7 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
     @Test
     public void shouldInstallUpgradeAndUnInstallPuppetTarBallModule() throws IOException {
         Deployed<?, ?> puppetDeployed = getDeployed(ARTIFACTS_APACHE_1_5_0_TAR);
-        assertThat(getSteps(puppetDeployed).size(), equalTo(1));
+        assertThat(getSteps(puppetDeployed).size(), equalTo(2));
         DeployedApplication deployedTarModule = newDeployedApplication("puppetlabs-apache", "1.0", puppetDeployed);
         assertModuleInstallSuccessfully(deployedTarModule);
 
@@ -56,7 +56,7 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
     @Test
     public void shouldInstallAndUnInstallPuppetTarBallModule() throws IOException {
         Deployed<?, ?> puppetDeployed = getDeployed(ARTIFACTS_APACHE_1_5_0_TAR);
-        assertThat(getSteps(puppetDeployed).size(), equalTo(1));
+        assertThat(getSteps(puppetDeployed).size(), equalTo(2));
         DeployedApplication deployedTarModule = newDeployedApplication("puppetlabs-apache", "1.0", puppetDeployed);
         assertModuleInstallSuccessfully(deployedTarModule);
 
