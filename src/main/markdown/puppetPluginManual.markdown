@@ -1,33 +1,17 @@
-## Requirements ##
+The XL Deploy Puppet plugin uses the Puppet provisioning tool to install modules and manifests on hosts.
 
-* **XL Deploy requirements**
-    * **XL Deploy**: Version 5.1.0+
-    * **Puppet**: Versions 3.4.3+ (Unix)
-    * **Other XL Deploy plugins**: None
+This document provides information that is specific to this version of the Puppet plugin. For general information about the plugin, refer to [Introduction to the XL Deploy Puppet plugin](/xl-deploy/concept/xl-deploy-puppet-plugin.html).
 
-* **Infrastructural requirements**
-    * Puppet software version 3.4.3+ configured on a unix machine.
+## Requirements
 
-## Overview ##
-
-The Puppet plugin is an XL-Deploy plugin that manages the Puppet provisioning tool to install modules and manifests on hosts.
-See the **Features** section below for all the supported feature lists.
-
-## Features ##
-
-* Apply manifest file for provisioning using `puppet apply` command.
-
-* Install and Uninstall puppet modules from the Puppet Forge.
-
-* Install and Uninstall puppet tar ball modules by uploading module tar file.
-
-* Apply individual manifests files present in a puppet manifest folder.
+* XL Deploy 5.1.0 or later
+* Puppet 3.4.3 (Unix)
 
 ## Limitations ##
 
-1. The plugin does not currently support deployments on Microsoft Windows-based hosts.
-2. The plugin only supports deployment on standalone puppet.
-3. The plugin does not support Puppet master and puppet agent nodes configuration.
+* The plugin does not support deployments on Microsoft Windows-based hosts
+* The plugin only supports deployment on stand-alone Puppet
+* The plugin does not support Puppet master and Puppet agent node configuration
 
 ## Release notes
 
