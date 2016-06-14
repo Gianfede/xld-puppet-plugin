@@ -1,5 +1,5 @@
 <itest>
-    <toplogy id="puppet-34-unix" enableByDefault="false">
+    <toplogy id="puppet-34-unix" enableByDefault="true">
         <placeholders>
             <host>puppet-34-unix</host>
         </placeholders>
