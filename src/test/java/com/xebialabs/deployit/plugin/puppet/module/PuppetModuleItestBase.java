@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 
-public class PuppetModuleItestBase extends PuppetItestBase {
+public abstract class PuppetModuleItestBase extends PuppetItestBase {
 
     protected static final String APACHE_MODULE_VERSION_1_5_0 = "v1.5.0";
     protected static final String APACHE_MODULE_VERSION_1_7_0 = "v1.7.0";

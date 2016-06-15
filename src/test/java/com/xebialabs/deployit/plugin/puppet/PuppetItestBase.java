@@ -38,7 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(Parameterized.class)
-public class PuppetItestBase {
+public abstract class PuppetItestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(PuppetItestBase.class);
     protected CapturingExecutionContext executionContext = new CapturingExecutionContext();
