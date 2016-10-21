@@ -29,4 +29,15 @@ public class PuppetItestWizard extends ItestWizard {
             ctx.destroy();
         }
     }
+
+    public void assertPlanForFailure(final DeltaSpecification spec) {
+        List<Step> steps = tester.resolvePlanWithStaging(spec);
+        TestExecutionContext ctx = new TestExecutionContext(ItestWizard.class);
+
+        try {
+            assertThat(DeployitTester.executePlan(steps, ctx), is(StepExitCode.FAIL));
+        } finally {
+            ctx.destroy();
+        }
+    }
 }

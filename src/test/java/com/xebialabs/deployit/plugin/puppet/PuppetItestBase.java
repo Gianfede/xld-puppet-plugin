@@ -12,6 +12,7 @@ import com.xebialabs.deployit.plugin.api.flow.Step;
 import com.xebialabs.deployit.plugin.api.reflect.Type;
 import com.xebialabs.deployit.plugin.api.udm.*;
 import com.xebialabs.deployit.plugin.overthere.Host;
+import com.xebialabs.deployit.test.deployment.DeltaSpecifications;
 import com.xebialabs.deployit.test.deployment.DeployitTester;
 import com.xebialabs.deployit.test.support.CapturingExecutionContext;
 import com.xebialabs.deployit.test.support.ItestTopology;
@@ -27,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +56,7 @@ public class PuppetItestBase {
     protected final String description;
     protected final ItestTopology topology;
     protected final Container container;
-    protected final ItestWizard wizard;
+    protected final PuppetItestWizard wizard;
 
     public PuppetItestBase(String description, ItestTopology topology, Container container) {
         this.description = description;
@@ -112,6 +114,17 @@ public class PuppetItestBase {
 
     public void assertInitial(final DeployedApplication app) {
         wizard.assertInitial(app);
+    }
+
+    public void assertFailure(final DeployedApplication app) {
+        DeltaSpecificationBuilder builder = (new DeltaSpecificationBuilder()).initial(DeltaSpecifications.createDeployedApplication(app.getVersion(), app.getEnvironment()));
+        Iterator var3 = app.getDeployeds().iterator();
+
+        while(var3.hasNext()) {
+            Deployed d = (Deployed)var3.next();
+            builder.create(d);
+        }
+        wizard.assertPlanForFailure(builder.build());
     }
 
     public DeployedApplication newDeployedArtifact(String name, String version, Deployed<?, ?>... deployeds) {
