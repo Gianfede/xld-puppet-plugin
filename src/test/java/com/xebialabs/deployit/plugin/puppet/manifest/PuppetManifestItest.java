@@ -15,6 +15,7 @@ import com.xebialabs.deployit.test.support.ItestTopology;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static com.xebialabs.platform.test.TestUtils.createArtifact;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertThat;
 public class PuppetManifestItest extends PuppetItestBase {
 
     private static final String MANIFEST_FILE = "artifacts/manifestTest.pp";
+    private static final String MANIFEST_FILE_FAILING = "artifacts/puppet-archive/manifests/failing-task.pp";
     private static final String MANIFEST_TEST_FILE_PATH = "/tmp/manifest.test";
 
     public PuppetManifestItest(String description, ItestTopology topology, Container container) {
@@ -50,6 +52,12 @@ public class PuppetManifestItest extends PuppetItestBase {
         assertManifestApplied(puppetDeployed, deployedManifest);
     }
 
+    @Test
+    public void shouldFailPuppetManifestFolderDeploymentForAFailingTask() throws IOException, URISyntaxException {
+        Deployed<?, ?> deployed = getDeployed(MANIFEST_FILE_FAILING);
+        DeployedApplication deployedManifest = newDeployedArtifact("puppetManifest", "1.0", deployed);
+        assertFailure(deployedManifest);
+    }
 
     private void assertManifestApplied(Deployed<?, ?> puppetDeployed, DeployedApplication deployedManifest) {
         assertThat(getSteps(puppetDeployed).size(), equalTo(2));

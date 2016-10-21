@@ -29,14 +29,14 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
 
     @Test
     public void shouldInstallUpgradeAndUnInstallPuppetModule() throws IOException {
-        Deployed<?, ?> deployed = getDeployed("1.5.0");
+        Deployed<?, ?> deployed = getDeployed("1.5.0", "puppetlabs-apache");
         assertThat(getSteps(deployed).size(), equalTo(2));
         DeployedApplication puppetModule = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModule);
         getPuppetModuleListCommandOutput();
         assertModuleInstallAndVersionCheck(APACHE_MODULE_VERSION_1_5_0);
 
-        Deployed<?, ?> upgradedDeployed = getDeployed("1.7.0");
+        Deployed<?, ?> upgradedDeployed = getDeployed("1.7.0", "puppetlabs-apache");
         assertThat(getSteps(upgradedDeployed).size(), equalTo(2));
         DeployedApplication puppetUpgradedModule = newDeployedApplication("puppetlabs-apache", "1.7.0", upgradedDeployed);
 
@@ -54,7 +54,7 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
     @Test
     public void shouldInstallAndUnInstallPuppetModule() {
 
-        Deployed<?, ?> deployed = getDeployed("1.5.0");
+        Deployed<?, ?> deployed = getDeployed("1.5.0", "puppetlabs-apache");
         assertThat(getSteps(deployed).size(), equalTo(2));
         DeployedApplication puppetModuleApp = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModuleApp);
@@ -66,8 +66,17 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
         assertThat(executionContext.getCapturedOutput(), hasItem(not(containsString("puppetlabs-apache"))));
     }
 
-    private Deployed<?, ?> getDeployed(String version) {
-        Deployed<?, ?> puppetModule = deployed((Deployable) newInstance("puppet.ModuleSpec", "puppetlabs-apache"), container, "puppet.Module");
+    @Test
+    public void shouldFailDeploymentForInstallingInvalidPuppetModule() {
+
+        Deployed<?, ?> deployed = getDeployed("1.5.0", "puppetlabs-apache-invalid");
+        assertThat(getSteps(deployed).size(), equalTo(2));
+        DeployedApplication puppetModuleApp = newDeployedApplication("puppetlabs-apache-invalid", "1.5.0", deployed);
+        assertFailure(puppetModuleApp);
+    }
+
+    private Deployed<?, ?> getDeployed(String version, String name) {
+        Deployed<?, ?> puppetModule = deployed((Deployable) newInstance("puppet.ModuleSpec", name), container, "puppet.Module");
         puppetModule.setProperty("version", version);
         puppetModule.setProperty("force", true);
         puppetModule.setProperty("ignoreDependencies", false);

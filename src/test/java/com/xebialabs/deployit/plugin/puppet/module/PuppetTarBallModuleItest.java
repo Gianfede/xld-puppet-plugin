@@ -71,6 +71,15 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
         assertThat(executionContext.getCapturedOutput(), hasItem(not(containsString("puppetlabs-apache"))));
     }
 
+    @Test
+    public void shouldFailDeploymentForInstallingInvalidPuppetTarBallModule() throws IOException {
+
+        Deployed<?, ?> deployed = getDeployed("test-module.tar.gz");
+        assertThat(getSteps(deployed).size(), equalTo(2));
+        DeployedApplication puppetModuleApp = newDeployedApplication("test-module", "1.0", deployed);
+        assertFailure(puppetModuleApp);
+    }
+
     private Deployed<?, ?> getDeployed(String artifactsApacheTarFile) throws IOException {
         BaseDeployableFileArtifact module = createFileArtifact("puppetlabs-apache", "1.0", artifactsApacheTarFile, "puppet.TarBallModuleSpec", tempFolder.newFolder());
         return wizard.deployed(module, container, "puppet.TarBallModule");

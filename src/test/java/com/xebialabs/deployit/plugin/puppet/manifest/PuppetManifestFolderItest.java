@@ -61,6 +61,32 @@ public class PuppetManifestFolderItest extends PuppetItestBase {
         assertManifestFolderApplied(deployed, deployedManifest);
     }
 
+    @Test
+    public void shouldFailPuppetManifestFolderDeploymentWhenInvalidHieraConfigPath() throws IOException, URISyntaxException {
+        Deployed<?, ?> deployed = getDeployed(MANIFEST_ARCHIVE);
+        deployed.setProperty("hieraConfig", "hiera.xyz");
+        DeployedApplication deployedManifest = newDeployedArtifact("puppetManifest", "1.0", deployed);
+        assertFailure(deployedManifest);
+    }
+
+    @Test
+    public void shouldDeployPuppetManifestFolderForValidHieraConfigPath() throws IOException, URISyntaxException {
+        Deployed<?, ?> deployed = getDeployed(MANIFEST_ARCHIVE);
+        deployed.setProperty("manifestFile", "site.pp");
+        deployed.setProperty("hieraConfig", "hiera.yaml");
+        DeployedApplication deployedManifest = newDeployedArtifact("puppetManifest", "1.0", deployed);
+        assertThat(getSteps(deployed).size(), equalTo(2));
+        assertInitial(deployedManifest);
+    }
+
+    @Test
+    public void shouldFailPuppetManifestFolderDeploymentForAFailingTask() throws IOException, URISyntaxException {
+        Deployed<?, ?> deployed = getDeployed(MANIFEST_ARCHIVE);
+        deployed.setProperty("manifestFile", "failing-task.pp");
+        DeployedApplication deployedManifest = newDeployedArtifact("puppetManifest", "1.0", deployed);
+        assertFailure(deployedManifest);
+    }
+
     private Deployed<?, ?> getDeployed(String manifestFile) throws IOException, URISyntaxException {
         BaseDeployableFolderArtifact manifest = null;
         manifest = createFolder("puppetManifest", "1.0", manifestFile, "puppet.ManifestFolderSpec");
@@ -74,7 +100,7 @@ public class PuppetManifestFolderItest extends PuppetItestBase {
     public <T extends DeployableArtifact> T createFolder(String name, String version, String classpathResource, String type) throws URISyntaxException {
         T artifact = (T) newInstance(type, id("Applications", "Test", version, name));
         URL artifactURL = Thread.currentThread().getContextClassLoader()
-                .getResource(classpathResource);
+            .getResource(classpathResource);
         artifact.setFile(LocalFile.valueOf(new java.io.File(artifactURL.toURI())));
         return artifact;
     }

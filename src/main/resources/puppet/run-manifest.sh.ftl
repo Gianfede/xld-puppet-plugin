@@ -4,11 +4,9 @@
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS
 # FOR A PARTICULAR PURPOSE. THIS CODE AND INFORMATION ARE NOT SUPPORTED BY XEBIALABS.
 #
-set -x
-${deployed.container.puppetPath}/puppet apply ${deployed.file.path}
-set +x
+${deployed.container.puppetPath}/puppet apply ${deployed.file.path} --detailed-exitcodes --color false
 rc=$?
-if [ $rc -ne 0 ]; then
+if [ $rc -ne 0 ] && [ $rc -ne 2 ]; then
   echo "Failed to execute puppet apply manifest." >&2
   exit $rc
 fi
