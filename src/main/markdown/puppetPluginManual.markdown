@@ -19,8 +19,8 @@ This document provides information that is specific to this version of the Puppe
 
 #### Bug fixes
 
-* [DEPL-10193] - XLD shows DONE in Execution plan even when there are errors while deploying using puppet plugin
-* [DEPL-10529] - Removed ANSI escape code from step logs
+* [DEPL-10193] - Execution plan shows DONE even when there are errors while deploying using Puppet plugin
+* [DEPL-10529] - Remove ANSI escape code from step logs
 
 ### xld-puppet-plugin 5.1.0
 
