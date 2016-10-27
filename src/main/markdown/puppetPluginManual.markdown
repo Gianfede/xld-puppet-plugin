@@ -15,13 +15,13 @@ This document provides information that is specific to this version of the Puppe
 
 ## Release notes
 
-### xld-puppet-plugin 5.1.0
-
-Initial release.
-
-### XLD Puppet plugin 5.1.1
+### xld-puppet-plugin 5.1.1
 
 #### Bug fixes
 
 * [DEPL-10193] - XLD shows DONE in Execution plan even when there are errors while deploying using puppet plugin
 * [DEPL-10529] - Removed ANSI escape code from step logs
+
+### xld-puppet-plugin 5.1.0
+
+Initial release.
