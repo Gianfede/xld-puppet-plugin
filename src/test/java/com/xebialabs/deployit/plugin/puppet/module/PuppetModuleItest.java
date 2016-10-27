@@ -30,14 +30,14 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
     @Test
     public void shouldInstallUpgradeAndUnInstallPuppetModule() throws IOException {
         Deployed<?, ?> deployed = getDeployed("1.5.0", "puppetlabs-apache");
-        assertThat(getSteps(deployed).size(), equalTo(2));
+        assertThat(getSteps(deployed).size(), equalTo(1));
         DeployedApplication puppetModule = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModule);
         getPuppetModuleListCommandOutput();
         assertModuleInstallAndVersionCheck(APACHE_MODULE_VERSION_1_5_0);
 
         Deployed<?, ?> upgradedDeployed = getDeployed("1.7.0", "puppetlabs-apache");
-        assertThat(getSteps(upgradedDeployed).size(), equalTo(2));
+        assertThat(getSteps(upgradedDeployed).size(), equalTo(1));
         DeployedApplication puppetUpgradedModule = newDeployedApplication("puppetlabs-apache", "1.7.0", upgradedDeployed);
 
         resetContext();
@@ -55,7 +55,7 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
     public void shouldInstallAndUnInstallPuppetModule() {
 
         Deployed<?, ?> deployed = getDeployed("1.5.0", "puppetlabs-apache");
-        assertThat(getSteps(deployed).size(), equalTo(2));
+        assertThat(getSteps(deployed).size(), equalTo(1));
         DeployedApplication puppetModuleApp = newDeployedApplication("puppetlabs-apache", "1.5.0", deployed);
         assertInitial(puppetModuleApp);
         getPuppetModuleListCommandOutput();
@@ -70,7 +70,7 @@ public class PuppetModuleItest extends PuppetModuleItestBase {
     public void shouldFailDeploymentForInstallingInvalidPuppetModule() {
 
         Deployed<?, ?> deployed = getDeployed("1.5.0", "puppetlabs-apache-invalid");
-        assertThat(getSteps(deployed).size(), equalTo(2));
+        assertThat(getSteps(deployed).size(), equalTo(1));
         DeployedApplication puppetModuleApp = newDeployedApplication("puppetlabs-apache-invalid", "1.5.0", deployed);
         assertFailure(puppetModuleApp);
     }

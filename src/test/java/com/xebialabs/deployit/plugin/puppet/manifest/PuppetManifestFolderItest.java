@@ -70,7 +70,7 @@ public class PuppetManifestFolderItest extends PuppetItestBase {
         deployed.setProperty("manifestFile", "site.pp");
         deployed.setProperty("hieraConfig", "hiera.yaml");
         DeployedApplication deployedManifest = newDeployedArtifact("puppetManifest", "1.0", deployed);
-        assertThat(getSteps(deployed).size(), equalTo(2));
+        assertThat(getSteps(deployed).size(), equalTo(1));
         assertInitial(deployedManifest);
     }
 

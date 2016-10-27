@@ -70,7 +70,7 @@ public class PuppetTarBallModuleItest extends PuppetModuleItestBase {
     public void shouldFailDeploymentForInstallingInvalidPuppetTarBallModule() throws IOException {
 
         Deployed<?, ?> deployed = getDeployed("test-module.tar.gz");
-        assertThat(getSteps(deployed).size(), equalTo(2));
+        assertThat(getSteps(deployed).size(), equalTo(1));
         DeployedApplication puppetModuleApp = newDeployedApplication("test-module", "1.0", deployed);
         assertFailure(puppetModuleApp);
     }
