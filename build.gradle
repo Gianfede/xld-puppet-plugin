@@ -21,6 +21,8 @@ apply plugin: "xebialabs.root.opinions"
 apply plugin: "xebialabs.dependency"
 apply plugin: "xebialabs.plugin.xld"
 
+group = 'com.xebialabs.deployit.plugins'
+
 dependencyManagement {
   importConf "com.xebialabs.xl-platform:xl-reference:${xlPlatformVersion}"
   importConf "com.xebialabs.deployit:xld-reference:${xlDeployVersion}"
