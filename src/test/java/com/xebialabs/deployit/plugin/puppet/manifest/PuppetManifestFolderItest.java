@@ -89,8 +89,8 @@ public class PuppetManifestFolderItest extends PuppetItestBase {
 
     private Deployed<?, ?> getDeployed(String manifestFile) throws IOException, URISyntaxException {
         BaseDeployableFolderArtifact manifest = null;
-        manifest = createFolder("puppetManifest", "1.0", manifestFile, "puppet.ManifestFolderSpec");
-        Deployed<?, ?> deployed = wizard.deployed(manifest, container, "puppet.ManifestFolder");
+        manifest = createFolder("puppetManifest", "1.0", manifestFile, "puppet.ManifestFolder");
+        Deployed<?, ?> deployed = wizard.deployed(manifest, container, "puppet.AppliedManifestFolder");
         deployed.setProperty("manifestFile", "start.pp");
         deployed.setProperty("manifestPath", "manifests");
         deployed.setProperty("modulePath", "modules");

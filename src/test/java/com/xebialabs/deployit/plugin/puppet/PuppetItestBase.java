@@ -47,8 +47,8 @@ import static org.hamcrest.Matchers.is;
 @RunWith(Parameterized.class)
 public abstract class PuppetItestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PuppetItestBase.class);
     protected CapturingExecutionContext executionContext = new CapturingExecutionContext();
+    private static final Logger LOG = LoggerFactory.getLogger(PuppetItestBase.class);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();

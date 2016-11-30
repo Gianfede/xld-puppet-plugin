@@ -6,46 +6,118 @@
 <rules
         xmlns="http://www.xebialabs.com/xl-deploy/xl-rules">
 
+    <step-macro name="puppet-apply-manifest">
+        <parameters>
+            <parameter name="targetHost" type="ci" description="Target host on which to execute puppet-apply"/>
+            <parameter name="description" type="string" description="Description of the puppet-apply step"/>
+            <parameter name="manifest" type="ci" description="Puppet manifest to be applied"/>
+        </parameters>
+        <steps>
+            <os-script>
+                <target-host expression="true">macro['targetHost']</target-host>
+                <description expression="true">macro['description']</description>
+                <script>puppet/apply-manifest</script>
+                <order>68</order>
+                <upload-artifacts>true</upload-artifacts>
+                <freemarker-context>
+                    <manifest expression="true">macro['manifest']</manifest>
+                </freemarker-context>
+            </os-script>
+        </steps>
+    </step-macro>
+
+    <step-macro name="puppet-install-tarball">
+        <parameters>
+            <parameter name="targetHost" type="ci" description="Target host on which to execute puppet-apply"/>
+            <parameter name="description" type="string" description="Description of the puppet-apply step"/>
+            <parameter name="tarball" type="ci" description="Puppet manifest to be applied"/>
+        </parameters>
+        <steps>
+            <os-script>
+                <target-host expression="true">macro['targetHost']</target-host>
+                <description expression="true">macro['description']</description>
+                <script>puppet/install-tarball-module</script>
+                <order>68</order>
+                <upload-artifacts>true</upload-artifacts>
+                <freemarker-context>
+                    <tarball expression="true">macro['tarball']</tarball>
+                </freemarker-context>
+            </os-script>
+        </steps>
+    </step-macro>
+
+    <step-macro name="puppet-install-module">
+        <parameters>
+            <parameter name="targetHost" type="ci" description="Target host on which to install the Puppet module"/>
+            <parameter name="description" type="string" description="Description of the puppet-install step"/>
+            <parameter name="module" type="ci" description="Puppet module to install"/>
+        </parameters>
+        <steps>
+            <os-script>
+                <target-host expression="true">macro['targetHost']</target-host>
+                <description expression="true">macro['description']</description>
+                <script>puppet/provision-install-module</script>
+                <order>66</order>
+                <freemarker-context>
+                    <module expression="true">macro['module']</module>
+                </freemarker-context>
+            </os-script>
+        </steps>
+    </step-macro>
+
+    <rule name="puppet.provisioner.Manifest.APPLY" scope="deployed">
+        <conditions>
+            <type>udm.BaseProvisioned</type>
+            <operation>CREATE</operation>
+        </conditions>
+        <planning-script-path>puppet/scripts/plan-provisioning-apply-manifest.py</planning-script-path>
+    </rule>
+
+    <rule name="puppet.provisioner.TarBall.APPLY" scope="deployed">
+        <conditions>
+            <type>udm.BaseProvisioned</type>
+            <operation>CREATE</operation>
+        </conditions>
+        <planning-script-path>puppet/scripts/plan-install-provisioner-tarball-module.py</planning-script-path>
+    </rule>
+
+    <rule name="puppet.provisioner.Module.INSTALL" scope="deployed">
+        <conditions>
+            <type>udm.BaseProvisioned</type>
+            <operation>CREATE</operation>
+        </conditions>
+        <planning-script-path>puppet/scripts/plan-provisioning-install-module.py</planning-script-path>
+    </rule>
+
+
     <rule name="puppet.Manifest.CREATE_MODIFY" scope="deployed">
         <conditions>
-            <type>puppet.Manifest</type>
+            <type>puppet.AppliedManifest</type>
             <operation>CREATE</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <steps>
-            <os-script>
-                <description expression="true">"Apply manifest %s on %s " % (deployed.name,deployed.container.name)</description>
-                <script>puppet/run-manifest</script>
-                <order expression="true">deployed.applyOrder</order>
-            </os-script>
-        </steps>
+        <planning-script-path>puppet/scripts/plan-apply-manifest.py</planning-script-path>
     </rule>
 
     <rule name="puppet.Manifest.NOOP" scope="deployed">
         <conditions>
-            <type>puppet.Manifest</type>
+            <type>puppet.AppliedManifest</type>
             <operation>NOOP</operation>
             <expression>deployed.applyOnNoop</expression>
         </conditions>
-        <steps>
-            <os-script>
-                <description expression="true">"Apply manifest %s on %s " % (deployed.name,deployed.container.name) </description>
-                <script>puppet/run-manifest</script>
-                <order expression="true">deployed.applyOrder</order>
-            </os-script>
-        </steps>
+        <planning-script-path>puppet/scripts/plan-apply-manifest.py</planning-script-path>
     </rule>
 
     <rule name="puppet.ManifestFolder.CREATE_MODIFY" scope="deployed">
         <conditions>
-            <type>puppet.ManifestFolder</type>
+            <type>puppet.AppliedManifestFolder</type>
             <operation>CREATE</operation>
             <operation>MODIFY</operation>
         </conditions>
         <steps>
             <os-script>
                 <description expression="true">"Apply manifest folder %s on %s " % (deployed.name,deployed.container.name)</description>
-                <script>puppet/run-manifest-folder</script>
+                <script>puppet/apply-manifest-folder</script>
                 <order expression="true">deployed.applyOrder</order>
             </os-script>
         </steps>
@@ -53,14 +125,14 @@
 
     <rule name="puppet.ManifestFolder.NOOP" scope="deployed">
         <conditions>
-            <type>puppet.ManifestFolder</type>
+            <type>puppet.AppliedManifestFolder</type>
             <operation>NOOP</operation>
             <expression>deployed.applyOnNoop</expression>
         </conditions>
         <steps>
             <os-script>
                 <description expression="true">"Apply manifest folder %s on %s " % (deployed.name,deployed.container.name)</description>
-                <script>puppet/run-manifest-folder</script>
+                <script>puppet/apply-manifest-folder</script>
                 <order expression="true">deployed.applyOrder</order>
             </os-script>
         </steps>
@@ -68,38 +140,39 @@
 
     <rule name="puppet.Module.CREATE_MODIFY" scope="deployed">
         <conditions>
-            <type>puppet.Module</type>
+            <type>puppet.InstalledModule</type>
             <operation>CREATE</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <planning-script-path>puppet/scripts/add-module-install-step.py</planning-script-path>
+        <planning-script-path>puppet/scripts/plan-install-module.py</planning-script-path>
     </rule>
 
     <rule name="puppet.Module.MODIFY_DESTROY" scope="deployed">
         <conditions>
-            <type>puppet.Module</type>
+            <type>puppet.InstalledModule</type>
             <operation>DESTROY</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <planning-script-path>puppet/scripts/add-module-uninstall-step.py</planning-script-path>
+        <planning-script-path>puppet/scripts/plan-uninstall-module.py</planning-script-path>
     </rule>
 
     <rule name="puppet.TarBallModule.CREATE_MODIFY" scope="deployed">
         <conditions>
-            <type>puppet.TarBallModule</type>
+            <type>puppet.InstalledTarBallModule</type>
             <operation>CREATE</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <planning-script-path>puppet/scripts/add-tarball-module-install-step.py</planning-script-path>
+        <planning-script-path>puppet/scripts/plan-install-tarball-module.py</planning-script-path>
     </rule>
+
 
     <rule name="puppet.TarBallModule.DESTROY_MODIFY" scope="deployed">
         <conditions>
-            <type>puppet.TarBallModule</type>
+            <type>puppet.InstalledTarBallModule</type>
             <operation>DESTROY</operation>
             <operation>MODIFY</operation>
         </conditions>
-        <planning-script-path>puppet/scripts/add-tarball-module-uninstall-step.py</planning-script-path>
+        <planning-script-path>puppet/scripts/plan-uninstall-tarball-module.py</planning-script-path>
     </rule>
 
 </rules>

@@ -9,7 +9,7 @@
             <host>puppet-34-unix</host>
         </placeholders>
         <targets>
-            <target id="Infrastructure/puppet-34-unix/puppet">
+            <target id="Infrastructure/puppet-34-unix">
             </target>
         </targets>
         <configurationItems>
@@ -20,10 +20,8 @@
                 <username>vagrant</username>
                 <password>vagrant</password>
                 <sudoUsername>vagrant</sudoUsername>
-            </overthere.SshHost>
-            <puppet.Standalone id="Infrastructure/puppet-34-unix/puppet">
                 <puppetPath>/usr/local/bin/</puppetPath>
-            </puppet.Standalone>
+            </overthere.SshHost>
         </configurationItems>
     </toplogy>
 </itest>

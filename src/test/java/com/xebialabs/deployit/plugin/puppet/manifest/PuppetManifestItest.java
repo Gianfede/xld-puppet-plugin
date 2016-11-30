@@ -11,6 +11,7 @@ import com.xebialabs.deployit.plugin.api.udm.Deployed;
 import com.xebialabs.deployit.plugin.api.udm.DeployedApplication;
 import com.xebialabs.deployit.plugin.api.udm.base.BaseDeployableArtifact;
 import com.xebialabs.deployit.plugin.puppet.PuppetItestBase;
+import com.xebialabs.deployit.plugin.puppet.PuppetProvisionedItestBase;
 import com.xebialabs.deployit.test.support.ItestTopology;
 import org.junit.Test;
 
@@ -21,11 +22,11 @@ import static com.xebialabs.platform.test.TestUtils.createArtifact;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class PuppetManifestItest extends PuppetItestBase {
+public class PuppetManifestItest extends PuppetProvisionedItestBase {
 
-    private static final String MANIFEST_FILE = "artifacts/manifestTest.pp";
-    private static final String MANIFEST_FILE_FAILING = "artifacts/puppet-archive/manifests/failing-task.pp";
-    private static final String MANIFEST_TEST_FILE_PATH = "/tmp/manifest.test";
+    protected static final String MANIFEST_FILE = "artifacts/manifestTest.pp";
+    protected static final String MANIFEST_FILE_FAILING = "artifacts/puppet-archive/manifests/failing-task.pp";
+    protected static final String MANIFEST_TEST_FILE_PATH = "/tmp/manifest.test";
 
     public PuppetManifestItest(String description, ItestTopology topology, Container container) {
         super(description, topology, container);
@@ -66,7 +67,7 @@ public class PuppetManifestItest extends PuppetItestBase {
     }
 
     private Deployed<?, ?> getDeployed(String manifestFile) throws IOException {
-        BaseDeployableArtifact manifest = createArtifact("puppetManifest", "1.0", manifestFile, "puppet.ManifestSpec", tempFolder.newFolder());
-        return wizard.deployed(manifest, container, "puppet.Manifest");
+        BaseDeployableArtifact manifest = createArtifact("puppetManifest", "1.0", manifestFile, "puppet.Manifest", tempFolder.newFolder());
+        return wizard.deployed(manifest, container, "puppet.AppliedManifest");
     }
 }
