@@ -4,7 +4,7 @@ This document provides information that is specific to this version of the Puppe
 
 ## Requirements
 
-* XL Deploy 5.1.0 or later
+* XL Deploy 6.0.0 or later
 * Puppet 3.4.3 (Unix)
 
 ## Limitations ##
@@ -15,13 +15,17 @@ This document provides information that is specific to this version of the Puppe
 
 ## Release notes
 
-### xld-puppet-plugin 5.1.1
+### XL Deploy Puppet plugin 6.0.0
+
+* [DEPL-9810] - Merge deployment and provisioning plugins for XL Deploy
+
+### XL Deploy Puppet plugin 5.1.1
 
 #### Bug fixes
 
 * [DEPL-10193] - Execution plan shows DONE even when there are errors while deploying using Puppet plugin
 * [DEPL-10529] - Remove ANSI escape code from step logs
 
-### xld-puppet-plugin 5.1.0
+### XL Deploy Puppet plugin 5.1.0
 
 Initial release.
