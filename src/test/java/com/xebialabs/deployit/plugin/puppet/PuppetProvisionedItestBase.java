@@ -74,7 +74,7 @@ public class PuppetProvisionedItestBase extends PuppetItestBase {
         ProvisioningPackage pkg = newInstance("udm.ProvisioningPackage");
         pkg.setId(id(app.getId(), version));
         pkg.setApplication(app);
-        Set<Provisionable> set = new HashSet<>();
+        Set<Deployable> set = new HashSet<>();
         for (Provisionable d : deployables) {
             d.setId(id(app.getId(), d.getId()));
             set.add(d);
