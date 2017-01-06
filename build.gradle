@@ -13,7 +13,7 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.xebialabs.gradle.plugins:gradle-xl-plugins-plugin:${xlPluginPluginVersion}"
+    classpath "com.xebialabs.gradle.plugins:gradle-xl-plugins-plugin:${xlPluginsPluginVersion}"
   }
 }
 
@@ -30,10 +30,10 @@ dependencyManagement {
 
 docgen.product = 'XL Deploy'
 docgen.puppetPluginManual = [
-        title: 'Puppet Plugin Manual',
-        appendCiReference: true,
-        appendStepReference: true,
-        prefixes: 'puppet'
+  title: 'Puppet Plugin Manual',
+  appendCiReference: true,
+  appendStepReference: true,
+  prefixes: 'puppet'
 ]
 
 thirdPartyLicense {
