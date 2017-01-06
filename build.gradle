@@ -30,7 +30,7 @@ dependencyManagement {
 
 docgen.product = 'XL Deploy'
 docgen.puppetPluginManual = [
-  title: 'Puppet Plugin Manual',
+  title: "Puppet Plugin Manual ${docgen.shortVersion}",
   appendCiReference: true,
   appendStepReference: true,
   prefixes: 'puppet'
@@ -44,15 +44,15 @@ grouped by license:\n"""
 gradle.startParameter.excludedTaskNames += "test"
 
 dependencies {
-    compile 'com.xebialabs.deployit.plugins:generic-plugin'
-    compile 'com.xebialabs.overthere:overthere'
-    compile 'org.python:jython-standalone'
-    compile "com.xebialabs.deployit:provision:${xlDeployVersion}"
+  compile 'com.xebialabs.deployit.plugins:generic-plugin'
+  compile 'com.xebialabs.overthere:overthere'
+  compile 'org.python:jython-standalone'
+  compile "com.xebialabs.deployit:provision:${xlDeployVersion}"
 
-    testCompile 'junit:junit'
-    testCompile 'com.xebialabs.deployit.engine:test-engine'
-    testCompile 'com.xebialabs.cloud:overcast'
-    testCompile "org.xmlmatchers:xml-matchers:0.10"
+  testCompile 'junit:junit'
+  testCompile 'com.xebialabs.deployit.engine:test-engine'
+  testCompile 'com.xebialabs.cloud:overcast'
+  testCompile "org.xmlmatchers:xml-matchers:0.10"
 }
 
 sourceSets {
