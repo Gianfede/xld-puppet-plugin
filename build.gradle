@@ -18,7 +18,7 @@ buildscript {
 }
 
 apply plugin: "xebialabs.root.opinions"
-apply plugin: "xebialabs.dependency"
+apply plugin: "com.xebialabs.dependency"
 apply plugin: "xebialabs.plugin.xld"
 
 group = 'com.xebialabs.deployit.plugins'
